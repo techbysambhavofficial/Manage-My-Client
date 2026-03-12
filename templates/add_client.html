@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Client | Lead Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(94, 114, 228, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 114, 228, 0.4);
+        }
+
+        .nav-link.secondary {
+            background: linear-gradient(135deg, #8898aa 0%, #6c7a8a 100%);
+            box-shadow: 0 4px 15px rgba(136, 152, 170, 0.3);
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-title {
+            color: #32325d;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-title span {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #525f7f;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #adb5bd;
+            font-style: italic;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23525f7f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 16px;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1);
+        }
+
+        .status-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .status-option {
+            position: relative;
+        }
+
+        .status-option input[type="radio"] {
+            display: none;
+        }
+
+        .status-option label {
+            display: block;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #525f7f;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 15px rgba(94, 114, 228, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(94, 114, 228, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 114, 228, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #525f7f;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            border-color: #5e72e4;
+            transform: translateY(-2px);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #5e72e4;
+        }
+
+        .info-box p {
+            color: #525f7f;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #8898aa;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 2em;
+            }
+            
+            .nav-bar {
+                padding: 15px 20px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .status-options {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .btn {
+                flex: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>➕ Add New Client</h2>
+            <p>Enter client information to create a new lead</p>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-links">
+                <a href="/" class="nav-link">👥 View Clients</a>
+                <a href="/dashboard" class="nav-link secondary">📊 Dashboard</a>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-title">
+                <span>📝</span>
+                Client Information
+            </div>
+
+            <div class="info-box">
+                <p>🔹 All fields are required unless marked optional</p>
+                <p>🔹 You can update client information later</p>
+            </div>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-input" placeholder="e.g., John Smith" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="business">Business Type</label>
+                        <input type="text" id="business" name="business" class="form-input" placeholder="e.g., Restaurant, Tech, Retail" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="e.g., (555) 123-4567" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="e.g., john@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="notes">Notes (Optional)</label>
+                    <textarea id="notes" name="notes" class="form-input" placeholder="Enter any additional information about the client..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Lead Status</label>
+                    <div class="status-options">
+                        <div class="status-option">
+                            <input type="radio" name="status" id="status-new" value="New Lead" checked>
+                            <label for="status-new">🆕 New Lead</label>
+                        </div>
+                        <div class="status-option">
+                            <input type="radio" name="status" id="status-contacted" value="Contacted">
+                            <label for="status-contacted">📞 Contacted</label>
+                        </div>
+                        <div class="status-option">
+                            <input type="radio" name="status" id="status-interested" value="Interested">
+                            <label for="status-interested">⭐ Interested</label>
+                        </div>
+                        <div class="status-option">
+                            <input type="radio" name="status" id="status-meeting" value="Meeting Scheduled">
+                            <label for="status-meeting">📅 Meeting Scheduled</label>
+                        </div>
+                        <div class="status-option">
+                            <input type="radio" name="status" id="status-closed" value="Deal Closed">
+                            <label for="status-closed">✅ Deal Closed</label>
+                        </div>
+                        <div class="status-option">
+                            <input type="radio" name="status" id="status-not-interested" value="Not Interested">
+                            <label for="status-not-interested">❌ Not Interested</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Save Client
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        🔄 Reset Form
+                    </button>
+                    <a href="/" class="btn btn-secondary" style="text-decoration: none; text-align: center;">
+                        ↩️ Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Client Leads Management System | Add New Client</p>
+        </div>
+    </div>
+</body>
+</html>

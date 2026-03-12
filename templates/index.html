@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Leads | Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(94, 114, 228, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 114, 228, 0.4);
+        }
+
+        .nav-link.logout {
+            background: linear-gradient(135deg, #f5365c 0%, #f56036 100%);
+            box-shadow: 0 4px 15px rgba(245, 54, 92, 0.3);
+        }
+
+        .search-section {
+            padding: 30px 40px;
+            background: #f8f9fa;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 25px;
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1);
+        }
+
+        .search-btn {
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(94, 114, 228, 0.3);
+            font-size: 1em;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 114, 228, 0.4);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border: 1px solid rgba(94, 114, 228, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #5e72e4;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #8898aa;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            padding: 18px 15px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #525f7f;
+        }
+
+        tr:hover td {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85em;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #2dce89 0%, #2dcecc 100%);
+            color: white;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fb6340 0%, #fbb140 100%);
+            color: white;
+        }
+
+        .status-inactive {
+            background: linear-gradient(135deg, #8898aa 0%, #6c7a8a 100%);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #11cdef 0%, #1171ef 100%);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 205, 239, 0.4);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #f5365c 0%, #f56036 100%);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 54, 92, 0.4);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #8898aa;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav-bar {
+                padding: 15px 20px;
+            }
+            
+            .search-section {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                padding: 8px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Client Leads Dashboard</h1>
+            <p>Manage and track all your client relationships in one place</p>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-links">
+                <a href="/dashboard" class="nav-link">📊 Dashboard</a>
+                <a href="/add" class="nav-link">➕ Add Client</a>
+                <a href="/export" class="nav-link">📥 Export CSV</a>
+            </div>
+            <a href="/logout" class="nav-link logout">🚪 Logout</a>
+        </div>
+
+        <div class="search-section">
+            <form class="search-form" action="/search">
+                <input type="text" class="search-input" name="q" placeholder="Search by name, business, email...">
+                <button type="submit" class="search-btn">🔍 Search</button>
+            </form>
+        </div>
+
+        <div class="content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ clients|length }}</div>
+                    <div class="stat-label">Total Clients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ clients|selectattr('status', 'equalto', 'Active')|list|length }}</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ clients|selectattr('status', 'equalto', 'Pending')|list|length }}</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ clients|selectattr('status', 'equalto', 'Inactive')|list|length }}</div>
+                    <div class="stat-label">Inactive</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Business</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in clients %}
+                        <tr>
+                            <td><strong>{{ c.name }}</strong></td>
+                            <td>{{ c.business }}</td>
+                            <td>
+                                <a href="tel:{{ c.phone }}" style="color: #5e72e4; text-decoration: none;">📞 {{ c.phone }}</a>
+                            </td>
+                            <td>
+                                <a href="mailto:{{ c.email }}" style="color: #5e72e4; text-decoration: none;">✉️ {{ c.email }}</a>
+                            </td>
+                            <td>
+                                {% if c.status == 'Active' %}
+                                <span class="status-badge status-active">{{ c.status }}</span>
+                                {% elif c.status == 'Pending' %}
+                                <span class="status-badge status-pending">{{ c.status }}</span>
+                                {% else %}
+                                <span class="status-badge status-inactive">{{ c.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="/edit/{{ c._id }}" class="action-btn edit-btn">✏️ Edit</a>
+                                    <a href="/delete/{{ c._id }}" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this client?')">🗑️ Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">
+                                <div style="font-size: 1.2em; color: #8898aa;">No clients found</div>
+                                <div style="margin-top: 15px;">
+                                    <a href="/add" class="nav-link" style="display: inline-block;">➕ Add Your First Client</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Client Leads Management System | All rights reserved</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Client Leads</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(94, 114, 228, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(94, 114, 228, 0.4);
+        }
+
+        .nav-link.logout {
+            background: linear-gradient(135deg, #f5365c 0%, #f56036 100%);
+            box-shadow: 0 4px 15px rgba(245, 54, 92, 0.3);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .welcome-section {
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h2 {
+            color: #32325d;
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .welcome-section p {
+            color: #8898aa;
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(94, 114, 228, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5e72e4, #825ee4);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(94, 114, 228, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #5e72e4;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: #8898aa;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-total .stat-number { color: #5e72e4; }
+        .stat-contacted .stat-number { color: #11cdef; }
+        .stat-interested .stat-number { color: #fb6340; }
+        .stat-closed .stat-number { color: #2dce89; }
+
+        .progress-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .progress-title {
+            color: #32325d;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .progress-bars {
+            display: grid;
+            gap: 20px;
+        }
+
+        .progress-item {
+            display: grid;
+            grid-template-columns: 120px 1fr 60px;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-label {
+            color: #525f7f;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .progress-bar-container {
+            height: 10px;
+            background: rgba(94, 114, 228, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .progress-bar.contacted { background: linear-gradient(90deg, #11cdef, #1171ef); width: 0%; }
+        .progress-bar.interested { background: linear-gradient(90deg, #fb6340, #fbb140); width: 0%; }
+        .progress-bar.closed { background: linear-gradient(90deg, #2dce89, #2dcecc); width: 0%; }
+
+        .progress-percentage {
+            color: #32325d;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .quick-actions {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .quick-action-btn {
+            padding: 20px;
+            background: white;
+            border: 2px dashed #e9ecef;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #525f7f;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-action-btn:hover {
+            border-color: #5e72e4;
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            font-size: 2em;
+        }
+
+        .quick-action-text {
+            font-weight: 600;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            color: #8898aa;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav-bar {
+                padding: 15px 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.5em;
+            }
+            
+            .progress-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .progress-percentage {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard Overview</h1>
+            <p>Track your lead generation progress and performance metrics</p>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-links">
+                <a href="/" class="nav-link">👥 View Clients</a>
+            </div>
+            <a href="/logout" class="nav-link logout">🚪 Logout</a>
+        </div>
+
+        <div class="content">
+            <div class="welcome-section">
+                <h2>Welcome back, {{ username if username else 'Team Member' }}! 👋</h2>
+                <p>Here's what's happening with your leads today.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-total">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-number">{{ total }}</div>
+                    <div class="stat-label">Total Leads</div>
+                </div>
+
+                <div class="stat-card stat-contacted">
+                    <div class="stat-icon">📞</div>
+                    <div class="stat-number">{{ contacted }}</div>
+                    <div class="stat-label">Contacted</div>
+                </div>
+
+                <div class="stat-card stat-interested">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number">{{ interested }}</div>
+                    <div class="stat-label">Interested</div>
+                </div>
+
+                <div class="stat-card stat-closed">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number">{{ closed }}</div>
+                    <div class="stat-label">Deals Closed</div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-title">📈 Conversion Progress</div>
+                <div class="progress-bars">
+                    <div class="progress-item">
+                        <span class="progress-label">Contacted</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar contacted" style="width: {% if total > 0 %}{{ (contacted / total * 100)|round }}%{% else %}0%{% endif %}"></div>
+                        </div>
+                        <span class="progress-percentage">{% if total > 0 %}{{ (contacted / total * 100)|round }}%{% else %}0%{% endif %}</span>
+                    </div>
+
+                    <div class="progress-item">
+                        <span class="progress-label">Interested</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar interested" style="width: {% if total > 0 %}{{ (interested / total * 100)|round }}%{% else %}0%{% endif %}"></div>
+                        </div>
+                        <span class="progress-percentage">{% if total > 0 %}{{ (interested / total * 100)|round }}%{% else %}0%{% endif %}</span>
+                    </div>
+
+                    <div class="progress-item">
+                        <span class="progress-label">Closed</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar closed" style="width: {% if total > 0 %}{{ (closed / total * 100)|round }}%{% else %}0%{% endif %}"></div>
+                        </div>
+                        <span class="progress-percentage">{% if total > 0 %}{{ (closed / total * 100)|round }}%{% else %}0%{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <a href="/add" class="quick-action-btn">
+                    <span class="quick-action-icon">➕</span>
+                    <span class="quick-action-text">Add New Lead</span>
+                </a>
+                <a href="/" class="quick-action-btn">
+                    <span class="quick-action-icon">👥</span>
+                    <span class="quick-action-text">View All Leads</span>
+                </a>
+                <a href="/export" class="quick-action-btn">
+                    <span class="quick-action-icon">📥</span>
+                    <span class="quick-action-text">Export Data</span>
+                </a>
+                <a href="/reports" class="quick-action-btn">
+                    <span class="quick-action-icon">📊</span>
+                    <span class="quick-action-text">View Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Client Leads Management System | Dashboard Overview</p>
+        </div>
+    </div>
+
+    <script>
+        // Animate progress bars on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
