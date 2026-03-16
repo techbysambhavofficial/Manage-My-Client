@@ -401,8 +401,24 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="/edit/{{ c._id }}" class="action-btn edit-btn">✏️ Edit</a>
-                                    <a href="/delete/{{ c._id }}" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this client?')">🗑️ Delete</a>
+
+                                    <a href="/send_whatsapp/{{ c.phone }}" class="action-btn" style="background:#25D366;color:white;" target="_blank">
+                                        💬 WhatsApp
+                                    </a>
+
+                                    <a href="/send_email/{{ c.email }}" class="action-btn" style="background:#EA4335;color:white;">
+                                        📧 Email
+                                    </a>
+
+                                    <a href="/edit/{{ c._id }}" class="action-btn edit-btn">
+                                        ✏️ Edit
+                                    </a>
+
+                                    <a href="/delete/{{ c._id }}" class="action-btn delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this client?')">
+                                        🗑️ Delete
+                                    </a>
+
                                 </div>
                             </td>
                         </tr>
